@@ -1,0 +1,11 @@
+[workspace]
+authors = ["Qwacktuz <104035252+Qwacktuz@users.noreply.github.com>"]
+channels = ["conda-forge"]
+name = "gamejam"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+pygame = ">=2.6.1,<3"
