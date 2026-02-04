@@ -11,8 +11,12 @@ class Game:
         self.isFullscreen = False
         self.running = True
 
+        self.clock = pg.time.Clock()
+
     def run(self):
         while self.running:
+            deltaTime = self.clock.tick(60) * 0.001
+
             self.inputhandler()
             self.render()
 
@@ -21,8 +25,14 @@ class Game:
             if event.type == pg.QUIT:
                 self.running = False
                 return
-            if event.type == pg.KEYDOWN:
 
+            # resize window
+            if event.type == pg.VIDEORESIZE and not self.isFullscreen:
+                self.windowed_size = (event.w, event.h)
+                self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
+
+            # add here for only on keydown
+            if event.type == pg.KEYDOWN:
                 # toggle fullscreen
                 if event.key == pg.K_F11:
                     self.isFullscreen = not self.isFullscreen
@@ -31,11 +41,9 @@ class Game:
                     else:
                         self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
 
-            # resize window
-            if event.type == pg.VIDEORESIZE and not self.isFullscreen:
-                self.windowed_size = (event.w, event.h)
-                self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
-
+            # add here for run every tick button is held down
+            keys = pg.key.get_pressed()
+            #if keys[pg.K_w]:
 
     def render(self):
         self.screen.fill((0,0,0))
