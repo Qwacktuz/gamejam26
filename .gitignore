@@ -205,6 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-.idea/*# pixi environments
+
+#pycharm
+.idea/*
+
+# pixi environments
 .pixi/*
 !.pixi/config.toml
