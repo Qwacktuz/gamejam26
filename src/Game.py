@@ -1,23 +1,33 @@
 import pygame as pg
+import numpy as np
+from src.Camera import Camera
+from src.Platform import Platform
+from src.Player import Player
+from src.World import World
+
 pg.init()
 
 class Game:
     def __init__(self):
-        displayInfo = pg.display.Info()
-        self.fullscreen_size = (displayInfo.current_w, displayInfo.current_h)
-        self.windowed_size = (1080, 720)
+        self.camera = Camera(np.array([0,0], dtype=np.float32), np.array([1080, 720], dtype=np.float32))
+        pg.display.set_caption("Game jam 26")
+        self.clock = pg.time.Clock()
 
-        self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
-        self.isFullscreen = False
         self.running = True
 
-        self.clock = pg.time.Clock()
+        self.player = Player(np.array([200,200], dtype=np.float32), np.array([200,200], dtype=np.float32))
+        self.world = World()
+        self.world.entities.append(self.player)
 
     def run(self):
         while self.running:
             deltaTime = self.clock.tick(60) * 0.001
 
             self.inputhandler()
+
+            self.world.update(deltaTime)
+
+            self.camera.smoothTo(self.player.pos, deltaTime, 0.25)
             self.render()
 
     def inputhandler(self):
@@ -27,25 +37,25 @@ class Game:
                 return
 
             # resize window
-            if event.type == pg.VIDEORESIZE and not self.isFullscreen:
-                self.windowed_size = (event.w, event.h)
-                self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
+            if event.type == pg.VIDEORESIZE:
+                self.camera.resize(event)
 
-            # add here for only on keydown
+            # add inputs here for only on keydown
             if event.type == pg.KEYDOWN:
-                # toggle fullscreen
                 if event.key == pg.K_F11:
-                    self.isFullscreen = not self.isFullscreen
-                    if self.isFullscreen:
-                        self.screen = pg.display.set_mode(self.fullscreen_size, pg.FULLSCREEN)
-                    else:
-                        self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
+                    self.camera.toggleFullscreen()
 
-            # add here for run every tick button is held down
-            keys = pg.key.get_pressed()
-            #if keys[pg.K_w]:
+        # add inputs here for run every tick button is held down
+        keys = pg.key.get_pressed()
+        # maybe scuff way to get player class to handle its own inputs
+        self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a])
 
     def render(self):
-        self.screen.fill((0,0,0))
-        pg.draw.rect(self.screen, (255,0,0), (200, 200, 100, 100))
+        self.camera.screen.fill((0,0,0))
+
+        self.world.render(self.camera)
+
         pg.display.flip()
+
+    def update(self, deltaTime: float):
+        self.world.update(deltaTime)
