@@ -14,7 +14,7 @@ class World:
 
     def update(self, deltaTime: float):
         for entity in self.entities:
-            entity.update(deltaTime)
+            entity.update(deltaTime, self.objects)
 
     def render(self, camera: Camera):
         for i in self.objects + self.entities:

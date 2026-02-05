@@ -10,13 +10,12 @@ class GameObject:
         self.pos = pos
         self.hitbox = hitbox
 
-    def canCollide(self, other: Self) -> bool:
-        return True
+    def collide(self, other: type[Self]) -> bool:
+        return np.all(self.pos + self.hitbox > other.pos) and np.all(self.pos < other.pos + other.hitbox)
 
-    def collide(self, other: Self) -> bool:
-        return np.all(self.pos + self.hitbox < other.pos) and np.all(self.pos < other.pos + other.hitbox)
-
-    def render(self, camera: Camera, box: np.ndarray, asset: str = "Assets/images.jpeg"):
+    def render(self, camera: Camera, box: np.ndarray = None, asset: str = "Assets/images.jpeg"):
+        if box is None:
+            return
         image = pg.image.load(asset).convert_alpha()
         rect = image.get_rect()
         rect.size = (box[0] / camera.size[0] * camera.screen.get_size()[0],
