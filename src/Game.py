@@ -19,6 +19,8 @@ class Game:
         self.world = World()
         self.world.entities.append(self.player)
 
+        self.animationFrame = 0
+
     def run(self):
         while self.running:
             deltaTime = self.clock.tick(60) * 0.001
@@ -53,7 +55,8 @@ class Game:
     def render(self):
         self.camera.screen.fill((0,0,0))
 
-        self.world.render(self.camera)
+        self.world.render(self.camera, self.animationFrame)
+        self.animationFrame += 1
 
         pg.display.flip()
 
