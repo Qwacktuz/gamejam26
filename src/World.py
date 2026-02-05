@@ -10,7 +10,7 @@ class World:
         self.entities: list[Entity] = []
         self.objects: list[GameObject] = [] # no entities
 
-        self.objects.append(Platform(np.array([200,200]), np.array([200,200])))
+        self.objects.append(Platform(np.array([600,600]), np.array([200,200])))
 
     def update(self, deltaTime: float):
         for entity in self.entities:
