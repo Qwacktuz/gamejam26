@@ -22,7 +22,3 @@ class Player(Entity):
     def update(self, deltaTime: float):
         self.velocity = approach(self.velocity, self.maxSpeed * self.lastInput, self.acceleration if not np.any(self.lastInput) else self.deacceleration)
         self.pos += self.velocity * deltaTime
-        # self.velocity += 100 * self.lastInput * deltaTime
-
-        # self.pos += self.velocity * deltaTime
-        # self.pos += self.lastInput * 300 * deltaTime

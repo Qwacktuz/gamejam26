@@ -16,5 +16,14 @@ class GameObject:
     def collide(self, other: Self) -> bool:
         return np.all(self.pos + self.hitbox < other.pos) and np.all(self.pos < other.pos + other.hitbox)
 
-    def render(self, camera: Camera, asset: str = "Assets/images.jpeg"):
-        raise NotImplementedError
+    def render(self, camera: Camera, box: np.ndarray, asset: str = "Assets/images.jpeg"):
+        image = pg.image.load(asset).convert_alpha()
+        rect = image.get_rect()
+        rect.size = (box[0] / camera.size[0] * camera.screen.get_size()[0],
+                     box[1] / camera.size[1] * camera.screen.get_size()[1])
+
+        relativePos = (self.pos - camera.pos) / camera.size * camera.screen.get_size()
+        rect.center = (relativePos[0], relativePos[1])
+
+        image = pg.transform.scale(image, (rect.w, rect.h))
+        camera.screen.blit(image, rect)
