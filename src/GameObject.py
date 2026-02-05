@@ -18,8 +18,8 @@ class GameObject:
             return
         image = pg.image.load(asset).convert_alpha()
         rect = image.get_rect()
-        rect.size = (box[0] / camera.size[0] * camera.screen.get_size()[0],
-                     box[1] / camera.size[1] * camera.screen.get_size()[1])
+        rect.size = (int(box[0] / camera.size[0] * camera.screen.get_size()[0]),
+                     int(box[1] / camera.size[1] * camera.screen.get_size()[1]))
 
         relativePos = (self.pos - camera.pos) / camera.size * camera.screen.get_size()
         rect.center = (relativePos[0], relativePos[1])
