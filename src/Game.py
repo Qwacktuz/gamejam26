@@ -27,7 +27,7 @@ class Game:
 
             self.world.update(deltaTime)
 
-            self.camera.smoothTo(self.player.pos, deltaTime, 0.25)
+            self.camera.smoothTo(self.player.pos, deltaTime, 0.25, 100)
             self.render()
 
     def inputhandler(self):
