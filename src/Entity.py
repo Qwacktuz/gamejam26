@@ -1,6 +1,6 @@
+from typing import Self
 from src.Camera import Camera
 from src.GameObject import GameObject
-import pygame as pg
 import numpy as np
 
 
@@ -9,17 +9,20 @@ class Entity(GameObject):
         super().__init__(pos, hitbox)
         self.velocity = np.array([0,0], dtype=np.float32)
 
-    def render(self, camera: Camera, asset: str = "Assets/images.jpeg"):
-        image = pg.image.load(asset).convert_alpha()
-        rect = image.get_rect()
-        rect.size = (self.hitbox[0] / camera.size[0] * camera.screen.get_size()[0],
-                     self.hitbox[1] / camera.size[1] * camera.screen.get_size()[1])
+    def render(self, camera: Camera, box: np.ndarray = None, asset: str = "Assets/images.jpeg"):
+        super().render(camera, self.hitbox, asset)
 
-        relativePos = (self.pos - camera.pos) / camera.size * camera.screen.get_size()
-        rect.center = (relativePos[0], relativePos[1])
+    def update(self, deltaTime: float, objects: list[GameObject]):
+        self.pos += self.velocity * deltaTime
+        for i in objects:
+            if self.collide(i):
+                self.adjustPos(i, self.velocity * deltaTime)
 
-        image = pg.transform.scale(image, (rect.w, rect.h))
-        camera.screen.blit(image, rect)
-
-    def update(self, deltaTime: float):
-        pass
+    def adjustPos(self, other: type[Self], lastMove: np.ndarray):
+        # move self out of others hitbox
+        # make better in the future (brain hurt)
+        self.pos -= lastMove
+#        change = np.zeros(2, dtype=np.float32)
+#        self.pos -= change[0]
+#        if not self.collide(other):
+#            pass
