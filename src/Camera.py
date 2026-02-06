@@ -10,7 +10,7 @@ class Camera:
 
         displayInfo = pg.display.Info()
         self.fullscreen_size = (displayInfo.current_w, displayInfo.current_h)
-        self.windowed_size = (1080, 720)
+        self.windowed_size = (1280, 720)
 
         self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
         self.isFullscreen = False
@@ -19,13 +19,24 @@ class Camera:
         self.isFullscreen = not self.isFullscreen
         if self.isFullscreen:
             self.screen = pg.display.set_mode(self.fullscreen_size, pg.FULLSCREEN)
+            self.updateRatio(self.fullscreen_size)
         else:
             self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
+            self.updateRatio(self.windowed_size)
 
     def resize(self, event):
         if not self.isFullscreen:
             self.windowed_size = (event.w, event.h)
             self.screen = pg.display.set_mode(self.windowed_size, pg.RESIZABLE)
+            self.updateRatio(self.windowed_size)
+
+    def zoom(self, factor: float):
+        self.size *= factor
+
+    def updateRatio(self, target):
+        # rescale self.size to keep ratio with actual screen
+        ratio = target[1] / target[0]
+        self.size[1] = int(self.size[0] * ratio)
 
     def smoothTo(self, target: np.ndarray, deltaTime: float, speed: float, minDistance: float):
         # if speed = -t/log_2(p) then the camera moves p% closer to the target in t seconds

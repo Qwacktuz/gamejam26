@@ -9,7 +9,7 @@ pg.init()
 
 class Game:
     def __init__(self):
-        self.camera = Camera(np.array([0,0], dtype=np.float32), 0.25*np.array([1080, 720], dtype=np.float32))
+        self.camera = Camera(np.array([0,0], dtype=np.float32), np.array([320, 180], dtype=np.float32))
         pg.display.set_caption("Game jam 26")
         self.clock = pg.time.Clock()
 
@@ -46,6 +46,10 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_F11:
                     self.camera.toggleFullscreen()
+                if event.key == pg.K_PLUS:
+                    self.camera.zoom(0.8)
+                if event.key == pg.K_MINUS:
+                    self.camera.zoom(1.25)
 
         # add inputs here for run every tick button is held down
         keys = pg.key.get_pressed()
