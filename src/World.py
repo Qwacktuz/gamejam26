@@ -1,26 +1,19 @@
 import os.path
-
 import numpy as np
+from src.Room import Room
 from src.Camera import Camera
-from src.Entity import Entity
-from src.GameObject import GameObject
-from src.Platform import Platform
 
 
 class World:
     def __init__(self):
-        self.entities: list[Entity] = []
-        self.objects: list[GameObject] = [] # no entities
+        self.rooms: list[Room] = []
 
-        self.objects.append(Platform(np.array([100,100]),
-                                     np.array([[0,0],[32,32]]),
-                                     np.array([32,32]),
-                                     os.path.join("Assets", "32gridmap.png")))
+        self.rooms.append(Room(np.array([0,0, 500, 500]), os.path.join("Assets", "Rooms", "start.json")))
 
     def update(self, deltaTime: float):
-        for entity in self.entities:
-            entity.update(deltaTime, self.objects)
+        for room in self.rooms:
+            room.update(deltaTime)
 
     def render(self, camera: Camera, animationFrame: int):
-        for i in self.objects + self.entities:
-            i.render(camera, animationFrame)
+        for room in self.rooms:
+            room.render(camera, animationFrame)

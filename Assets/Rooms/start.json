@@ -1,0 +1,17 @@
+{
+  "entities": [
+
+  ],
+  "objects": [
+    {
+      "type": "Block",
+      "pos": [100,100],
+      "size": [32,32]
+    },
+    {
+      "type": "Block",
+      "pos": [200, 100],
+      "size": [32, 32]
+    }
+  ]
+}

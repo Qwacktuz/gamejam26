@@ -1,7 +1,6 @@
 import pygame as pg
 import numpy as np
 from src.Camera import Camera
-from src.Platform import Platform
 from src.Player import Player
 from src.World import World
 
@@ -17,7 +16,7 @@ class Game:
 
         self.player = Player(np.array([0,0], dtype=np.float32))
         self.world = World()
-        self.world.entities.append(self.player)
+        self.world.rooms[0].entities.append(self.player)
 
         self.animationFrame = 0
 
@@ -51,7 +50,7 @@ class Game:
                 if event.key == pg.K_MINUS:
                     self.camera.zoom(1.25)
 
-        # add inputs here for run every tick button is held down
+        # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()
         # maybe scuff way to get player class to handle its own inputs
         self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a])
