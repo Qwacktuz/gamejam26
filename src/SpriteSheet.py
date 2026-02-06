@@ -5,7 +5,7 @@ class SpriteSheet:
     def __init__(self, path: str, width: int, height: int):
         if not os.path.exists(path):
             raise FileNotFoundError
-        self.sheet = pg.image.load(path)
+        self.sheet = pg.image.load(path).convert_alpha()
 
         self.images = self.get_images(width, height)
 
@@ -13,7 +13,7 @@ class SpriteSheet:
         return self.images[state][frame]
 
     def load_image(self, state, frame, width, height):
-        image = pg.Surface((width, height)).convert_alpha()
+        image = pg.Surface((width, height), pg.SRCALPHA, 32)
         image.blit(self.sheet, (0, 0), (frame * width, state * height, width, height))
         return image
 

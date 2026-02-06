@@ -9,13 +9,13 @@ pg.init()
 
 class Game:
     def __init__(self):
-        self.camera = Camera(np.array([0,0], dtype=np.float32), np.array([1080, 720], dtype=np.float32))
+        self.camera = Camera(np.array([0,0], dtype=np.float32), 0.25*np.array([1080, 720], dtype=np.float32))
         pg.display.set_caption("Game jam 26")
         self.clock = pg.time.Clock()
 
         self.running = True
 
-        self.player = Player(np.array([200,200], dtype=np.float32), np.array([200,200], dtype=np.float32))
+        self.player = Player(np.array([0,0], dtype=np.float32))
         self.world = World()
         self.world.entities.append(self.player)
 
@@ -29,7 +29,7 @@ class Game:
 
             self.world.update(deltaTime)
 
-            self.camera.smoothTo(self.player.pos, deltaTime, 0.25, 100)
+            self.camera.smoothTo(self.player.pos, deltaTime, 0.25, 10)
             self.render()
 
     def inputhandler(self):

@@ -12,7 +12,10 @@ class World:
         self.entities: list[Entity] = []
         self.objects: list[GameObject] = [] # no entities
 
-        self.objects.append(Platform(np.array([600,600]), np.array([200,200]), os.path.join("Assets", "32gridmap.png")))
+        self.objects.append(Platform(np.array([100,100]),
+                                     np.array([[0,0],[32,32]]),
+                                     np.array([32,32]),
+                                     os.path.join("Assets", "32gridmap.png")))
 
     def update(self, deltaTime: float):
         for entity in self.entities:
@@ -20,4 +23,4 @@ class World:
 
     def render(self, camera: Camera, animationFrame: int):
         for i in self.objects + self.entities:
-            i.render(camera, animationFrame, animationFrame)
+            i.render(camera, animationFrame)
