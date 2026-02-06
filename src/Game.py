@@ -16,7 +16,7 @@ class Game:
 
         self.player = Player(np.array([0,0], dtype=np.float32))
         self.world = World()
-        self.world.rooms[0].entities.append(self.player)
+        self.world.currentRoom.entities.append(self.player)
 
         self.animationFrame = 0
 
