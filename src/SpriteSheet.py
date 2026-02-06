@@ -4,7 +4,7 @@ import pygame as pg
 class SpriteSheet:
     def __init__(self, path: str, width: int, height: int):
         if not os.path.exists(path):
-            raise FileNotFoundError
+            return
         self.sheet = pg.image.load(path).convert_alpha()
 
         self.images = self.get_images(width, height)

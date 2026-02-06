@@ -1,5 +1,6 @@
 import numpy as np
 
+from src.Barrier import Barrier
 from src.Block import Block
 from src.Entity import Entity
 from src.GameObject import GameObject
@@ -11,11 +12,12 @@ entityTypes = {
 }
 
 objectTypes = {
-    "Block": Block
+    "Block": Block,
+    "Barrier": Barrier,
 }
 
 def createEntity(source, id: str, position) -> Entity:
     return entityTypes[id](source + np.array(position))
 
 def createObject(source, id: str, position, size) -> GameObject:
-    return objectTypes[id](source + np.array(position))
+    return objectTypes[id](source + np.array(position), size)

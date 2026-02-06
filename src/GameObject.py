@@ -12,7 +12,10 @@ class GameObject:
         self.pos = pos
         self.hitbox = hitbox
         self.renderingBox = renderingBox
-        self.spriteSheet = SpriteSheet(asset, self.renderingBox[0], self.renderingBox[1])
+        if asset is None:
+            self.spriteSheet = None
+        else:
+            self.spriteSheet = SpriteSheet(asset, self.renderingBox[0], self.renderingBox[1])
 
         self.animationFrame = 0
         self.animationState = 0 # make a statemachine handle this or some shit
@@ -25,11 +28,15 @@ class GameObject:
             return
         image = self.spriteSheet.get_image(self.animationState, self.animationFrame)
         rect = image.get_rect()
-        rect.size = (int(self.renderingBox[0] / camera.size[0] * camera.screen.get_size()[0]),
-                     int(self.renderingBox[1] / camera.size[1] * camera.screen.get_size()[1]))
+        rect.size = (self.renderingBox / camera.size * camera.screen.get_size()).astype(int)
 
         relativePos = (self.pos - camera.pos) / camera.size * camera.screen.get_size()
         rect.center = (relativePos[0], relativePos[1])
 
         image = pg.transform.scale(image, (rect.w, rect.h))
         camera.screen.blit(image, rect)
+
+    def renderHitbox(self, camera: Camera):
+        size = (self.hitbox[1] / camera.size * camera.screen.get_size()).astype(int)
+        topLeft = ((self.pos - camera.pos - 16) / camera.size * camera.screen.get_size()).astype(int)
+        pg.draw.rect(camera.screen, (0, 255, 0), (topLeft, size))

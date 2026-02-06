@@ -1,0 +1,16 @@
+import numpy as np
+
+from src.Camera import Camera
+from src.GameObject import GameObject
+
+
+class Barrier(GameObject):
+    def __init__(self, pos: np.ndarray, size: tuple[int, int]):
+        super().__init__(pos,
+                         np.array([[0, 0], size], dtype=np.int32),
+                         np.array([32, 32], dtype=np.int32),
+                         None)
+
+    def render(self, camera: Camera, animationFrame: int = 0):
+        self.renderHitbox(camera)
+        super().render(camera, animationFrame)

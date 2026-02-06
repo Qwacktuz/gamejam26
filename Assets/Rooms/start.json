@@ -1,5 +1,6 @@
 {
-  "box": [[0,0], [500, 500]],
+  "box": [[0,0], [320, 180]],
+  "background": "background.png",
   "entities": [
 
   ],
@@ -7,12 +8,17 @@
     {
       "type": "Block",
       "pos": [100,100],
-      "size": [32,32]
+      "size": [32, 32]
     },
     {
       "type": "Block",
       "pos": [200, 100],
       "size": [32, 32]
+    },
+    {
+      "type": "Barrier",
+      "pos": [52,50],
+      "size": [32, 100]
     }
   ]
 }
