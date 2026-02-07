@@ -3,10 +3,10 @@ import os
 import numpy as np
 import pygame as pg
 import json
-from src.Camera import Camera
-from src.Entity import Entity
-from src.GameObject import GameObject
-from src.ObjectTypes import createObject, createEntity
+from src.Rendering.Camera import Camera
+from src.World.Entities.Entity import Entity
+from src.World.Objects.GameObject import GameObject
+from src.World.ObjectTypes import createObject, createEntity
 
 
 class Room:

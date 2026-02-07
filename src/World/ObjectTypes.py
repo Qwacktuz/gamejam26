@@ -1,10 +1,10 @@
 import numpy as np
 
-from src.Barrier import Barrier
-from src.Block import Block
-from src.Entity import Entity
-from src.GameObject import GameObject
-from src.Player import Player
+from src.World.Objects.Barrier import Barrier
+from src.World.Objects.Block import Block
+from src.World.Entities.Entity import Entity
+from src.World.Objects.GameObject import GameObject
+from src.World.Entities.Player import Player
 
 entityTypes = {
     "Player": Player

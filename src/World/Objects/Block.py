@@ -1,7 +1,7 @@
 import os.path
 
 import numpy as np
-from src.GameObject import GameObject
+from src.World.Objects.GameObject import GameObject
 
 
 class Block(GameObject):

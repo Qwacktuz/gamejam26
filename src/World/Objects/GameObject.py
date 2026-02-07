@@ -1,8 +1,8 @@
 from typing import Self
-from src.Camera import Camera
+from src.Rendering.Camera import Camera
 import pygame as pg
 import numpy as np
-from src.SpriteSheet import SpriteSheet
+from src.Rendering.SpriteSheet import SpriteSheet
 
 
 # superclass for stuff that can be placed in the level

@@ -1,8 +1,11 @@
+import os.path
+
 import pygame as pg
 import numpy as np
-from src.Camera import Camera
-from src.Player import Player
-from src.World import World
+from src.Rendering.Camera import Camera
+from src.World.Entities.Player import Player
+from src.World.World import World
+from src.UI.UI import UI
 
 pg.init()
 
@@ -19,6 +22,8 @@ class Game:
         self.world.currentRoom.entities.append(self.player)
 
         self.animationFrame = 0
+
+        # self.ui = UI(os.path.join("Assets", "dialogue1.png"))
 
     def run(self):
         while self.running:
@@ -59,6 +64,7 @@ class Game:
         self.camera.screen.fill((0,0,0))
 
         self.world.render(self.camera, self.animationFrame)
+        # self.ui.render(self.camera.screen, 0)
         self.animationFrame += 1
 
         pg.display.flip()

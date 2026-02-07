@@ -1,9 +1,7 @@
 import os.path
-import numpy as np
-
-from src.Player import Player
-from src.Room import Room
-from src.Camera import Camera
+from src.World.Entities.Player import Player
+from src.World.Room import Room
+from src.Rendering.Camera import Camera
 
 
 class World:

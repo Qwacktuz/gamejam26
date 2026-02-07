@@ -1,7 +1,7 @@
 import numpy as np
 
-from src.Camera import Camera
-from src.GameObject import GameObject
+from src.Rendering.Camera import Camera
+from src.World.Objects.GameObject import GameObject
 
 
 class Barrier(GameObject):
@@ -12,5 +12,5 @@ class Barrier(GameObject):
                          None)
 
     def render(self, camera: Camera, animationFrame: int = 0):
-        self.renderHitbox(camera)
+        # self.renderHitbox(camera)
         super().render(camera, animationFrame)

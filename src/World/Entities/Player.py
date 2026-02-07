@@ -1,8 +1,8 @@
-from src.Camera import Camera
-from src.Entity import Entity
+from src.Rendering.Camera import Camera
+from src.World.Entities.Entity import Entity
 import numpy as np
 import os
-from src.GameObject import GameObject
+from src.World.Objects.GameObject import GameObject
 from src.Util import approach
 
 
@@ -16,8 +16,8 @@ class Player(Entity):
         self.lastInput = np.zeros(2, dtype=np.int32)
 
         self.maxSpeed = 90
-        self.acceleration = 500
-        self.deacceleration = 200
+        self.acceleration = 1000
+        self.deacceleration = 400
 
     def input(self, y, x):
         self.lastInput[0] = x
@@ -26,11 +26,11 @@ class Player(Entity):
             self.lastInput * 0.7071067812
 
     def update(self, deltaTime: float, objects: list[GameObject]):
-        self.velocity = approach(self.velocity, self.maxSpeed * self.lastInput, self.acceleration if not np.any(self.lastInput) else self.deacceleration)
+        self.velocity = approach(self.velocity, self.maxSpeed * self.lastInput, (self.acceleration if np.any(self.lastInput) else self.deacceleration) * deltaTime)
         super().update(deltaTime, objects)
         
     def render(self, camera: Camera, animationFrame=0):
-        if animationFrame % 10 == 0:
+        if animationFrame % 6 == 0:
             self.animationFrame = (self.animationFrame + 1) % 6
         # self.animationState = 1 if np.any(self.lastInput) else 0
         super().render(camera, animationFrame)

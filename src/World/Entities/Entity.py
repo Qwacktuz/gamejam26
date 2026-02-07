@@ -1,6 +1,6 @@
 from typing import Self
-from src.Camera import Camera
-from src.GameObject import GameObject
+from src.Rendering.Camera import Camera
+from src.World.Objects.GameObject import GameObject
 import numpy as np
 
 class Entity(GameObject):
