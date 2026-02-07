@@ -42,3 +42,6 @@ class Camera:
         # if speed = -t/log_2(p) then the camera moves p% closer to the target in t seconds
         # p=0.01 is 1%
         self.pos = lerp(self.pos, approach(target - self.size * 0.5, self.pos, minDistance), deltaTime, speed)
+
+    def toWorldPos(self, pos: np.ndarray) -> np.ndarray:
+        return self.pos + pos * self.size / self.screen.get_size()

@@ -1,8 +1,8 @@
 import os.path
-
 import pygame as pg
 import numpy as np
 from src.Rendering.Camera import Camera
+from src.UI.Editor import Editor
 from src.World.Entities.Player import Player
 from src.World.World import World
 from src.UI.UI import UI
@@ -24,6 +24,7 @@ class Game:
         self.animationFrame = 0
 
         # self.ui = UI(os.path.join("Assets", "dialogue1.png"))
+        self.editor = Editor(self.world)
 
     def run(self):
         while self.running:
@@ -54,11 +55,18 @@ class Game:
                     self.camera.zoom(0.8)
                 if event.key == pg.K_MINUS:
                     self.camera.zoom(1.25)
+                if event.key == pg.K_p:
+                    self.world.save()
+
+            if event.type == pg.MOUSEBUTTONDOWN:
+                self.editor.press(self.camera.toWorldPos(event.pos))
 
         # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()
         # maybe scuff way to get player class to handle its own inputs
         self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a])
+
+        self.editor.input(keys)
 
     def render(self):
         self.camera.screen.fill((0,0,0))

@@ -5,6 +5,7 @@ import pygame as pg
 import json
 from src.Rendering.Camera import Camera
 from src.World.Entities.Entity import Entity
+from src.World.Entities.Player import Player
 from src.World.Objects.GameObject import GameObject
 from src.World.ObjectTypes import createObject, createEntity
 
@@ -15,6 +16,8 @@ class Room:
         self.entities: list[Entity] = []
         self.objects: list[GameObject] = [] # no entities
         self.background: None | pg.Surface = None
+        self.path = path
+        self.backgroundPath = None
 
         self.load(path)
 
@@ -26,12 +29,22 @@ class Room:
         self.objects = [createObject(self.box[0], i["type"], i["pos"], i["size"]) for i in data["objects"]]
         if data["background"]:
             self.background = pg.image.load(os.path.join("Assets", data["background"])).convert_alpha()
+            self.backgroundPath = data["background"]
 
-    def contains(self, pos: np.ndarray, box: np.ndarray) -> bool:
-        return np.all(self.box[0] + self.box[1] > pos - box[0]) and np.all(self.box[0] < pos + box[1])
+    def save(self):
+        data = dict()
+        data["box"] = self.box.tolist()
+        data["background"] = self.backgroundPath
+        data["entities"] = [i.save() for i in self.entities if not isinstance(i, Player)]
+        data["objects"] = [i.save() for i in self.objects]
+        with open(self.path, "w") as f:
+            json.dump(data, f)
+
+    def contains(self, pos: np.ndarray, size: np.ndarray) -> bool:
+        return np.all(self.box[0] + self.box[1] > pos - size[0]) and np.all(self.box[0] < pos + size[1])
 
     def isOnscreen(self, camera: Camera) -> bool:
-        return True
+        return np.all(self.box[0] + self.box[1] > camera.pos) and np.all(self.box[0] < camera.pos + camera.size)
 
     def update(self, deltaTime: float):
         moved = []

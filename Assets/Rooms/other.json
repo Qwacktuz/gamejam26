@@ -1,14 +1,1 @@
-{
-  "box": [[320,0], [320, 180]],
-  "background": null,
-  "entities": [
-
-  ],
-  "objects": [
-    {
-      "type": "Block",
-      "pos": [0,0],
-      "size": [32,32]
-    }
-  ]
-}
+{"box": [[320, 0], [320, 180]], "background": null, "entities": [], "objects": []}

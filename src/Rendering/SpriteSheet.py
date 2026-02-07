@@ -10,7 +10,6 @@ class SpriteSheet:
 
         self = super().__new__(cls)
 
-        print(f"Loading {path}")
         self.sheet = pg.image.load(path).convert_alpha()
         self.images = self.get_images(width, height)
 

@@ -10,3 +10,6 @@ class Block(GameObject):
                          np.array([[0,0], [32, 32]], dtype=np.int32),
                          np.array([32, 32], dtype=np.int32),
                          os.path.join("Assets", "32gridmap.png"))
+
+    def save(self, type: str = ""):
+        return super().save("Block")

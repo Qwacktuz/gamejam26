@@ -1,24 +1,4 @@
-{
-  "box": [[0,0], [320, 180]],
-  "background": "background.png",
-  "entities": [
-
-  ],
+{"box": [[0, 0], [320, 180]], "background": "background.png", "entities": [],
   "objects": [
-    {
-      "type": "Block",
-      "pos": [100,100],
-      "size": [32, 32]
-    },
-    {
-      "type": "Block",
-      "pos": [200, 100],
-      "size": [32, 32]
-    },
-    {
-      "type": "Barrier",
-      "pos": [52,50],
-      "size": [32, 100]
-    }
-  ]
-}
+    {"type": "Barrier", "pos": [73, 69], "size": [11, 40]},
+    {"type": "Block", "pos": [142, 106], "size": [32, 32]}]}

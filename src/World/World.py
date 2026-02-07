@@ -22,7 +22,12 @@ class World:
                         self.currentRoom = room
                     room.addEntity(entity)
                     entity.update(deltaTime, room.objects)
+                    break
 
     def render(self, camera: Camera, animationFrame: int):
         for room in self.rooms:
             room.render(camera, animationFrame)
+
+    def save(self):
+        for room in self.rooms:
+            room.save()

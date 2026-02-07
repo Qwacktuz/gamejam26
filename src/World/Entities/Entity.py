@@ -17,7 +17,7 @@ class Entity(GameObject):
             if self.collide(i):
                 self.adjustPos(i, self.velocity * deltaTime)
 
-    def adjustPos(self, other: type[Self], lastMove: np.ndarray):
+    def adjustPos(self, other: GameObject, lastMove: np.ndarray):
         # move self out of others hitbox
         # make better in the future (brain hurt)
         self.pos -= lastMove
@@ -25,3 +25,9 @@ class Entity(GameObject):
 #        self.pos -= change[0]
 #        if not self.collide(other):
 #            pass
+
+    def save(self, type: str = ""):
+        data = dict()
+        data["type"] = type
+        data["pos"] = self.pos.tolist()
+        return data

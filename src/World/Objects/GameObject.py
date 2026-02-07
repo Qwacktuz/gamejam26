@@ -23,6 +23,10 @@ class GameObject:
     def collide(self, other: type[Self]) -> bool:
         return np.all(self.pos + self.hitbox[1] > other.pos - other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
 
+    def collidePoint(self, pos: np.ndarray):
+        return np.all(self.pos + self.hitbox[0] < pos) and np.all(pos < self.pos + self.hitbox[1])
+
+
     def render(self, camera: Camera, animationFrame: int = 0):
         if self.renderingBox is None or self.spriteSheet is None:
             return
@@ -40,3 +44,10 @@ class GameObject:
         size = (self.hitbox[1] / camera.size * camera.screen.get_size()).astype(int)
         topLeft = ((self.pos - camera.pos - 16) / camera.size * camera.screen.get_size()).astype(int)
         pg.draw.rect(camera.screen, (0, 255, 0), (topLeft, size))
+
+    def save(self, type: str = ""):
+        data = dict()
+        data["type"] = type
+        data["pos"] = self.pos.tolist()
+        data["size"] = self.hitbox[1].tolist()
+        return data
