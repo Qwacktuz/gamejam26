@@ -11,8 +11,6 @@ class World:
         self.rooms.append(Room(os.path.join("Assets", "Rooms", "start.json")))
         self.currentRoom = self.rooms[0]
 
-        self.rooms.append(Room(os.path.join("Assets", "Rooms", "other.json")))
-
     def update(self, deltaTime: float):
         moved = self.currentRoom.update(deltaTime)
         for entity in moved:

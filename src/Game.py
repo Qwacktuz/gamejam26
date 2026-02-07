@@ -57,6 +57,8 @@ class Game:
                     self.camera.zoom(1.25)
                 if event.key == pg.K_p:
                     self.world.save()
+                if event.key == pg.K_SPACE:
+                    self.player.lastJump = self.player.bufferTime
 
             if event.type == pg.MOUSEBUTTONDOWN:
                 self.editor.press(self.camera.toWorldPos(event.pos))
@@ -64,7 +66,7 @@ class Game:
         # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()
         # maybe scuff way to get player class to handle its own inputs
-        self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a])
+        self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a], keys[pg.K_SPACE])
 
         self.editor.input(keys)
 
