@@ -56,6 +56,8 @@ class Editor(UI):
                 if room.contains(pos, np.zeros(2)):
                     self.currentRoom = room
                     break
+            else:
+                return
 
         if self.currentBlock is None:
             for block in self.currentRoom.objects:

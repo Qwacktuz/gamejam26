@@ -1,4 +1,4 @@
-{"box": [[0, 0], [320, 180]], "background": "background.png", "entities": [],
+{"box": [[0, 0], [320, 180]], "background": "level1.png", "entities": [],
   "objects": [
     {"type": "Barrier", "pos": [73, 69], "size": [11, 40]},
     {"type": "Block", "pos": [142, 106], "size": [32, 32]},

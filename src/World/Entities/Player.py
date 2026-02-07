@@ -11,7 +11,8 @@ class Player(Entity):
         super().__init__(pos,
                          np.array([[10,11],[20, 22]], dtype=np.int32),
                          np.array([32, 32], dtype=np.int32),
-                         os.path.join("Assets", "Player-idle.png"))
+                         os.path.join("Assets", "kitty_normal.png"))
+        self.frameTimes = [6,4]
 
         self.lastInput = np.zeros(2, dtype=np.int32)
         self.jumpPressed = False
@@ -36,6 +37,8 @@ class Player(Entity):
         self.lastInput[0] = x
         self.lastInput[1] = y
         self.jumpPressed = jump
+        if x != 0:
+            self.lookDir = x
 
     def update(self, deltaTime: float, objects: list[GameObject]):
         self.velocity[0] = approach(self.velocity[0],
@@ -62,15 +65,25 @@ class Player(Entity):
             self.velocity[1] = self.jumpPower
             self.velocity[0] += self.lastInput[0] * self.jumpHBoost
             self.lastGrounded = 0
-            self.isGrounded = False
 
         self.lastJump -= deltaTime
         self.lastGrounded -= deltaTime
 
+        self.updateState()
+        self.isGrounded = False
         super().update(deltaTime, objects)
         
     def render(self, camera: Camera, animationFrame=0):
-        if animationFrame % 6 == 0:
+        if animationFrame % self.frameTimes[self.animationState] == 0:
             self.animationFrame = (self.animationFrame + 1) % 6
         # self.animationState = 1 if np.any(self.lastInput) else 0
+        if self.jumpPressed and self.velocity[1] < 0:
+            self.animationFrame = 2
         super().render(camera, animationFrame)
+
+    def updateState(self):
+        if self.isGrounded:
+            if abs(self.velocity[0]) < 1:
+                self.animationState = 0
+            else:
+                self.animationState = 1

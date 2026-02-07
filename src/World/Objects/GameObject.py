@@ -19,6 +19,7 @@ class GameObject:
 
         self.animationFrame = 0
         self.animationState = 0 # make a statemachine handle this or some shit
+        self.lookDir = 1
 
     def collide(self, other: type[Self]) -> bool:
         return np.all(self.pos + self.hitbox[1] > other.pos - other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
@@ -38,11 +39,12 @@ class GameObject:
         rect.center = (relativePos[0], relativePos[1])
 
         image = pg.transform.scale(image, (rect.w, rect.h))
+        image = pg.transform.flip(image, self.lookDir == 1, False)
         camera.screen.blit(image, rect)
 
     def renderHitbox(self, camera: Camera):
         size = (self.hitbox[1] / camera.size * camera.screen.get_size()).astype(int)
-        topLeft = ((self.pos - camera.pos - 16) / camera.size * camera.screen.get_size()).astype(int)
+        topLeft = ((self.pos + self.hitbox[0] - camera.pos - 16) / camera.size * camera.screen.get_size()).astype(int)
         pg.draw.rect(camera.screen, (0, 255, 0), (topLeft, size))
 
     def save(self, type: str = ""):
