@@ -12,7 +12,7 @@ class Barrier(GameObject):
                          None)
 
     def render(self, camera: Camera, animationFrame: int = 0):
-        self.renderHitbox(camera)
+        # self.renderHitbox(camera)
         super().render(camera, animationFrame)
 
     def save(self, path: str = ""):

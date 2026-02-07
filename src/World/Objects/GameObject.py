@@ -19,7 +19,7 @@ class GameObject:
 
         self.animationFrame = 0
         self.animationState = 0 # make a statemachine handle this or some shit
-        self.lookDir = 1
+        self.lookDir = np.ones(2)
 
     def collide(self, other: type[Self]) -> bool:
         return np.all(self.pos + self.hitbox[1] > other.pos - other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
@@ -27,19 +27,23 @@ class GameObject:
     def collidePoint(self, pos: np.ndarray):
         return np.all(self.pos + self.hitbox[0] < pos) and np.all(pos < self.pos + self.hitbox[1])
 
-
-    def render(self, camera: Camera, animationFrame: int = 0):
+    def render(self, camera: Camera, animationFrame: int = 0, box = None):
+        if box is None:
+            box = self.renderingBox
         if self.renderingBox is None or self.spriteSheet is None:
             return
         image = self.spriteSheet.get_image(self.animationState, self.animationFrame)
+        self.renderImage(image, box, camera, animationFrame)
+
+    def renderImage(self, image, box, camera: Camera, animationFrame: int = 0):
         rect = image.get_rect()
-        rect.size = (self.renderingBox / camera.size * camera.screen.get_size()).astype(int)
+        rect.size = (box / camera.size * camera.screen.get_size()).astype(int)
 
         relativePos = (self.pos - camera.pos) / camera.size * camera.screen.get_size()
         rect.center = (relativePos[0], relativePos[1])
 
         image = pg.transform.scale(image, (rect.w, rect.h))
-        image = pg.transform.flip(image, self.lookDir == 1, False)
+        image = pg.transform.flip(image, bool(self.lookDir[0] == 1), False)
         camera.screen.blit(image, rect)
 
     def renderHitbox(self, camera: Camera):

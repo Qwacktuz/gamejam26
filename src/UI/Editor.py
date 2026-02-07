@@ -1,5 +1,5 @@
 import numpy as np
-
+from src.World.ObjectTypes import createObject
 from src.UI.UI import UI
 from src.World.Objects.GameObject import GameObject
 from src.World.World import World
@@ -14,6 +14,7 @@ class Editor(UI):
         self.currentBlock: GameObject|None = None
 
     def input(self, keys):
+        step = 1 if keys[pg.K_LSHIFT] else 8
         if keys[pg.K_z]: self.mode = 0
         elif keys[pg.K_x]: self.mode = 1
         elif keys[pg.K_c]: self.mode = 2
@@ -23,32 +24,36 @@ class Editor(UI):
             self.currentBlock = None
         elif keys[pg.K_e]:
             self.currentBlock = None
+        elif keys[pg.K_n]:
+            if self.currentRoom is not None:
+                self.currentBlock = createObject(self.currentRoom.box[0], "Barrier", self.currentRoom.box[1]*0.5, (32, 32))
+                self.currentRoom.addObject(self.currentBlock)
 
         if self.currentBlock is not None:
             if keys[pg.K_UP]:
-                if self.mode == 0: self.currentBlock.pos[1] -= 1
-                elif self.mode == 2: self.currentBlock.hitbox[1, 1] -= 1
+                if self.mode == 0: self.currentBlock.pos[1] -= step
+                elif self.mode == 2: self.currentBlock.hitbox[1, 1] -= step
                 elif self.mode == 1:
-                    self.currentBlock.pos[1] -= 1
-                    self.currentBlock.hitbox[1, 1] += 1
+                    self.currentBlock.pos[1] -= step
+                    self.currentBlock.hitbox[1, 1] += step
             elif keys[pg.K_DOWN]:
-                if self.mode == 0: self.currentBlock.pos[1] += 1
-                elif self.mode == 1: self.currentBlock.hitbox[1, 1] += 1
+                if self.mode == 0: self.currentBlock.pos[1] += step
+                elif self.mode == 1: self.currentBlock.hitbox[1, 1] += step
                 elif self.mode == 2:
-                    self.currentBlock.pos[1] += 1
-                    self.currentBlock.hitbox[1, 1] -= 1
+                    self.currentBlock.pos[1] += step
+                    self.currentBlock.hitbox[1, 1] -= step
             elif keys[pg.K_LEFT]:
-                if self.mode == 0: self.currentBlock.pos[0] -= 1
-                elif self.mode == 2: self.currentBlock.hitbox[1, 0] -= 1
+                if self.mode == 0: self.currentBlock.pos[0] -= step
+                elif self.mode == 2: self.currentBlock.hitbox[1, 0] -= step
                 elif self.mode == 1:
-                    self.currentBlock.pos[0] -= 1
-                    self.currentBlock.hitbox[1, 0] += 1
+                    self.currentBlock.pos[0] -= step
+                    self.currentBlock.hitbox[1, 0] += step
             elif keys[pg.K_RIGHT]:
-                if self.mode == 0: self.currentBlock.pos[0] += 1
-                elif self.mode == 1: self.currentBlock.hitbox[1, 0] += 1
+                if self.mode == 0: self.currentBlock.pos[0] += step
+                elif self.mode == 1: self.currentBlock.hitbox[1, 0] += step
                 elif self.mode == 2:
-                    self.currentBlock.pos[0] += 1
-                    self.currentBlock.hitbox[1, 0] -= 1
+                    self.currentBlock.pos[0] += step
+                    self.currentBlock.hitbox[1, 0] -= step
 
     def press(self, pos):
         if self.currentRoom is None:

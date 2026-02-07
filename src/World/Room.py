@@ -68,3 +68,6 @@ class Room:
 
     def addEntity(self, entity: Entity):
         self.entities.append(entity)
+
+    def addObject(self, newObject: GameObject):
+        self.objects.append(newObject)

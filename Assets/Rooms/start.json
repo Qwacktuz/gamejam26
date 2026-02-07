@@ -1,11 +1,1 @@
-{"box": [[0, 0], [320, 180]], "background": "level1.png", "entities": [],
-  "objects": [
-    {"type": "Barrier", "pos": [73, 69], "size": [11, 40]},
-    {"type": "Block", "pos": [142, 106], "size": [32, 32]},
-    {
-      "type": "Barrier",
-      "pos": [0, 170],
-      "size": [320, 10]
-    }
-  ]
-}
+{"box": [[0, 0], [320, 180]], "background": "level1.png", "entities": [], "objects": [{"type": "Barrier", "pos": [56, 112], "size": [32, 9]}, {"type": "Barrier", "pos": [112.0, 112.0], "size": [32, 9]}, {"type": "Barrier", "pos": [152.0, 152.0], "size": [8, 16]}, {"type": "Barrier", "pos": [160.0, 152.0], "size": [24, 8]}, {"type": "Barrier", "pos": [208.0, 152.0], "size": [8, 8]}, {"type": "Barrier", "pos": [192.0, 104.0], "size": [40, 16]}, {"type": "Barrier", "pos": [200.0, 120.0], "size": [24, 8]}, {"type": "Barrier", "pos": [208.0, 96.0], "size": [8, 8]}, {"type": "Barrier", "pos": [264.0, 112.0], "size": [16, 8]}, {"type": "Barrier", "pos": [144.0, 72.0], "size": [24, 8]}, {"type": "Barrier", "pos": [264.0, 72.0], "size": [64, 16]}, {"type": "Barrier", "pos": [312.0, 74.0], "size": [16, 94]}, {"type": "Barrier", "pos": [296.0, 144.0], "size": [24, 40]}, {"type": "Barrier", "pos": [16.0, 168.0], "size": [64, 32]}, {"type": "Barrier", "pos": [96.0, 168.0], "size": [32, 8]}, {"type": "Barrier", "pos": [104.0, 176.0], "size": [16, 8]}, {"type": "Barrier", "pos": [232.0, 176.0], "size": [32, 16]}]}

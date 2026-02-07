@@ -1,11 +1,9 @@
-import os.path
 import pygame as pg
 import numpy as np
 from src.Rendering.Camera import Camera
 from src.UI.Editor import Editor
 from src.World.Entities.Player import Player
 from src.World.World import World
-from src.UI.UI import UI
 
 pg.init()
 
@@ -29,6 +27,8 @@ class Game:
     def run(self):
         while self.running:
             deltaTime = self.clock.tick(60) * 0.001
+            if deltaTime > 0.1:
+                deltaTime = 1/60
 
             self.inputhandler()
 
@@ -60,15 +60,19 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.player.lastJump = self.player.bufferTime
 
+                self.editor.input(pg.key.get_pressed())
+
             if event.type == pg.MOUSEBUTTONDOWN:
                 self.editor.press(self.camera.toWorldPos(event.pos))
 
         # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()
         # maybe scuff way to get player class to handle its own inputs
-        self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a], keys[pg.K_SPACE])
+        self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a],
+                          keys[pg.K_SPACE],
+                          keys[pg.K_PERIOD])
 
-        self.editor.input(keys)
+        # self.editor.input(keys)
 
     def render(self):
         self.camera.screen.fill((0,0,0))
