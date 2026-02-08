@@ -1,6 +1,6 @@
 # GameJam 26 submisison
 
-"Aquapaw" is our submission for the GameJam 2026 competition at campus.
+"Aquapaw" is our submission for the 48 hour GameJam 2026 competition at campus.
 This is our first time making a game with graphic design, audio design and awesome Celeste-like movement.
 
 **Made by**
