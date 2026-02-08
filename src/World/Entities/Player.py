@@ -9,22 +9,28 @@ from src.World.Objects.GameObject import GameObject
 from src.Util import approach
 import pygame as pg
 
-
 class Player(Entity):
     def __init__(self, pos: np.ndarray, room):
-        super().__init__(
-            pos,
-            np.array([[10, 11], [20, 22]], dtype=np.int32),
-            np.array([32, 32], dtype=np.int32),
-            os.path.join("Assets", "kitty_normal.png"),
-        )
+        self.hitboxes = np.array([[[16,15],[22,21]],
+                                         [[10,11],[20,22]]], dtype=np.int32)
+        self.renderingBoxes = np.array([[16,10],
+                                               [32,32]], dtype=np.int32)
+        self.maxSize = 1
+        self.size = 1
+
+        super().__init__(pos,
+                         self.hitboxes[self.size],
+                         self.renderingBoxes[self.size],
+                         None)
         self.room = room
-        self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
-        self.dashArrow.images[0].insert(
-            1, pg.transform.rotate(self.dashArrow.images[0][0], -90)
-        )
-        # self.dashArrow.images[0][2] = pg.transform.rotate(self.dashArrow.images[0][2], 180)
         self.isPlayer = True
+
+        self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
+        self.dashArrow.images[0].insert(1, pg.transform.rotate(self.dashArrow.images[0][0], -90))
+
+        self.spriteSheets = [SpriteSheet(os.path.join("Assets", "kitty_small.png"),  16, 10),
+                             SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32)]
+        self.spriteSheet = self.spriteSheets[self.size]
 
         self.frameTimes = [6, 4, 4, 6]
 
@@ -48,11 +54,12 @@ class Player(Entity):
         self.jumpThruBoost = -40
 
         self.bufferTime = 0.1
-        self.cayoteTime = 0.1
+        self.cayoteTime = 0.3
 
         self.lastJump = 0
         self.lastGrounded = 0
 
+        self.lastDash = 0
         self.dashTransTimer = 0
         self.dashTransTime = 0.6
         self.dashCooldownTimer = 0
@@ -62,8 +69,6 @@ class Player(Entity):
         self.dashSpeed = 200
         self.lastDashDirection = np.array([1, 0], dtype=int)
         self.dashDirection = np.zeros(2)
-
-        self.size = 1
 
     def input(self, y, x, jump, dash):
         self.lastInput[0] = x
@@ -76,16 +81,12 @@ class Player(Entity):
             self.lookDir[0] = x
 
     def update(self, deltaTime: float, objects: list[GameObject]):
-        if (
-            self.dashPressed
-            and self.dashTransTimer <= 0
-            and self.state == 0
-            and self.dashCooldownTimer < 0
-        ):
+        if self.lastDash > 0 and self.state == 0 and self.dashCooldownTimer < 0 and self.size > 0:
             self.state = 1
             self.lastJump = 0
             self.lastGrounded = 0
             self.animationFrame = 0
+            self.lastDash = 0
             self.dashTransTimer = self.dashTransTime
 
         if self.state == 0:
@@ -125,19 +126,19 @@ class Player(Entity):
                 self.jumpSound.play()
 
             self.lastJump -= deltaTime
+            self.lastDash -= deltaTime
             self.lastGrounded -= deltaTime
             self.dashCooldownTimer -= deltaTime
 
         elif self.state == 1:
             self.velocity = approach(self.velocity, 0, self.acceleration * deltaTime)
             self.dashTransTimer -= deltaTime
-            if self.dashTransTimer < 0:
+            if self.dashTransTimer < 0 or not self.dashPressed:
                 self.state = 2
                 self.dashTimer = self.dashTime
                 self.dashDirection = self.lastDashDirection.copy()
-                self.room.addEntity(
-                    WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed)
-                )
+                self.room.addEntity(WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed))
+                self.shrink()
                 self.dashSound.play()
 
         elif self.state == 2:
@@ -165,12 +166,9 @@ class Player(Entity):
             self.animationFrame = min(self.animationFrame, 2)
 
         if self.state == 1 or self.state == 2:
-            image = self.dashArrow.get_image(
-                0,
-                abs(self.lastDashDirection[1]) + 2 * abs(self.lastDashDirection[0]) - 1,
-            )
-            image = pg.transform.flip(image, True, bool(self.lastDashDirection[1] == 1))
-            self.renderImage(image, (64, 64), camera, 0)
+            image = self.dashArrow.get_image(0, abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
+            image = pg.transform.flip(image, True, bool(self.lastDashDirection[1]==1))
+            self.renderImage(image, (64,64), camera, 0)
 
         super().render(camera, animationFrame)
 
@@ -185,7 +183,17 @@ class Player(Entity):
             self.animationState = 2
 
     def grow(self):
-        self.size = min(self.size, self.size + 1)
+        self.size = min(self.maxSize, self.size + 1)
+        self.spriteSheet = self.spriteSheets[self.size]
+        self.hitbox = self.hitboxes[self.size]
+        self.renderingBox = self.renderingBoxes[self.size]
+
+    def shrink(self):
+        self.size = max(0, self.size - 1)
+        self.spriteSheet = self.spriteSheets[self.size]
+        self.hitbox = self.hitboxes[self.size]
+        self.renderingBox = self.renderingBoxes[self.size]
+        self.animationState = 1
 
     def onCollide(self, entity: Entity, move: np.ndarray):
         return

@@ -52,7 +52,7 @@ class GameObject:
         camera.screen.blit(image, rect)
 
     def renderHitbox(self, camera: Camera):
-        size = (self.hitbox[1] / camera.size * camera.screen.get_size()).astype(int)
+        size = ((self.hitbox[1] - self.hitbox[0]) / camera.size * camera.screen.get_size()).astype(int)
         topLeft = ((self.pos + self.hitbox[0] - camera.pos - 16) / camera.size * camera.screen.get_size()).astype(int)
         pg.draw.rect(camera.screen, (0, 255, 0), (topLeft, size))
 

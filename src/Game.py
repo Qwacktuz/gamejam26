@@ -1,6 +1,7 @@
 import pygame as pg
 import numpy as np
 from src.Rendering.Camera import Camera
+from src.Rendering.Skybox import Skybox
 from src.UI.Editor import Editor
 from src.World.Entities.Player import Player
 from src.World.World import World
@@ -32,8 +33,27 @@ class Game:
         self.music_paused = False
 
         # self.ui = UI(os.path.join("Assets", "dialogue1.png"))
-        self.editing = False
+        self.editing = True
         self.editor = Editor(self.world)
+
+        self.skybox = Skybox()
+
+        self.inputs = {"default": {
+            "up": pg.K_w,
+            "down": pg.K_s,
+            "left": pg.K_a,
+            "right": pg.K_d,
+            "jump": pg.K_SPACE,
+            "dash": pg.K_j,
+        },
+        "celeste": {
+            "up": pg.K_UP,
+            "down": pg.K_DOWN,
+            "left": pg.K_LEFT,
+            "right": pg.K_RIGHT,
+            "jump": pg.K_c,
+            "dash": pg.K_x,
+        }}["default"]
 
     def run(self):
         while self.running:
@@ -68,8 +88,12 @@ class Game:
                     self.camera.zoom(1.25)
                 if event.key == pg.K_p and self.editing:
                     self.world.save()
-                if event.key == pg.K_SPACE:
+                if event.key == self.inputs["jump"]:
                     self.player.lastJump = self.player.bufferTime
+                if event.key == pg.K_g:
+                    self.player.grow()
+                if event.key == self.inputs["dash"]:
+                    self.player.lastDash = self.player.bufferTime
                 if event.key == pg.K_m:
                     if self.music_paused:
                         pg.mixer.music.unpause()
@@ -88,17 +112,16 @@ class Game:
         # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()
         # maybe scuff way to get player class to handle its own inputs
-        self.player.input(
-            keys[pg.K_s] - keys[pg.K_w],
-            keys[pg.K_d] - keys[pg.K_a],
-            keys[pg.K_SPACE],
-            keys[pg.K_PERIOD],
-        )
+        self.player.input(keys[self.inputs["down"]] - keys[self.inputs["up"]], keys[self.inputs["right"]] - keys[self.inputs["left"]],
+                          keys[self.inputs["jump"]],
+                          keys[self.inputs["dash"]])
 
         # self.editor.input(keys)
 
     def render(self):
-        self.camera.screen.fill((0, 0, 0))
+        self.camera.screen.fill((69, 41, 63))
+
+        self.skybox.render(self.camera)
 
         self.world.render(self.camera, self.animationFrame)
         # self.ui.render(self.camera.screen, 0)

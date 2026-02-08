@@ -3,7 +3,7 @@ from src.World.Objects.GameObject import GameObject
 import numpy as np
 
 class Entity(GameObject):
-    def __init__(self, pos: np.ndarray, hitbox: np.ndarray, renderingBox: np.ndarray, asset: str):
+    def __init__(self, pos: np.ndarray, hitbox: np.ndarray, renderingBox: np.ndarray, asset: str|None):
         super().__init__(pos, hitbox, renderingBox, asset)
         self.velocity = np.array([0,0], dtype=np.float32)
 
