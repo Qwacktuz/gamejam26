@@ -22,7 +22,7 @@ pixi run python main.py
 
 ## Tools and libraries used
 
-- Pixi and git project management
+- Pixi and git for project management
 - Pygame and numpy for game logic
 - Asperite for pixel art
 - Tenacity (Audacity) and UltraBox for sound design
