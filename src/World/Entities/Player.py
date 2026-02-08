@@ -49,9 +49,13 @@ class Player(Entity):
         self.jumpSound = pg.mixer.Sound(
             os.path.join("Assets", "Sounds", "sfx_jump1.wav")
         )
+        # self.dashSound = pg.mixer.Sound(
+        #     os.path.join("Assets", "Sounds", "sfx_swish1.wav")
+        # )
         self.dashSound = pg.mixer.Sound(
-            os.path.join("Assets", "Sounds", "sfx_swish1.wav")
-        )
+            os.path.join("Assets", "Sounds", "fah.wav")
+        )  # FAAAH :3
+
         self.shrinkSound = pg.mixer.Sound(
             os.path.join("Assets", "Sounds", "sfx_dash2.wav")
         )
