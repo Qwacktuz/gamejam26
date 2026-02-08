@@ -25,17 +25,11 @@ class Player(Entity):
         self.isPlayer = True
 
         self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
-<<<<<<< HEAD
         for i in range(5):
-            self.dashArrow.images[0].insert(i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90))
+            self.dashArrow.images[0].insert(
+                i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90)
+            )
         self.dashArrowFrame = 0
-||||||| parent of 067c6f2 (feat(sound): update sound for various player actions)
-        self.dashArrow.images[0].insert(1, pg.transform.rotate(self.dashArrow.images[0][0], -90))
-=======
-        self.dashArrow.images[0].insert(
-            1, pg.transform.rotate(self.dashArrow.images[0][0], -90)
-        )
->>>>>>> 067c6f2 (feat(sound): update sound for various player actions)
 
         self.spriteSheets = [
             SpriteSheet(os.path.join("Assets", "kitty_small.png"), 16, 10),
@@ -195,24 +189,17 @@ class Player(Entity):
             self.animationFrame = min(self.animationFrame, 2)
 
         if self.state == 1 or self.state == 2:
-<<<<<<< HEAD
             if animationFrame % 3 == 0:
                 self.dashArrowFrame = min(self.dashArrowFrame + 1, 4)
-            image = self.dashArrow.get_image(0, 3*self.dashArrowFrame + abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
-            image = pg.transform.flip(image, True, bool(self.lastDashDirection[1]==1))
-            self.renderImage(image, (64,64), camera, 0)
-||||||| parent of 067c6f2 (feat(sound): update sound for various player actions)
-            image = self.dashArrow.get_image(0, abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
-            image = pg.transform.flip(image, True, bool(self.lastDashDirection[1]==1))
-            self.renderImage(image, (64,64), camera, 0)
-=======
             image = self.dashArrow.get_image(
                 0,
-                abs(self.lastDashDirection[1]) + 2 * abs(self.lastDashDirection[0]) - 1,
+                3 * self.dashArrowFrame
+                + abs(self.lastDashDirection[1])
+                + 2 * abs(self.lastDashDirection[0])
+                - 1,
             )
             image = pg.transform.flip(image, True, bool(self.lastDashDirection[1] == 1))
             self.renderImage(image, (64, 64), camera, 0)
->>>>>>> 067c6f2 (feat(sound): update sound for various player actions)
 
         super().render(camera, animationFrame)
 
@@ -243,4 +230,3 @@ class Player(Entity):
 
     def onCollide(self, entity: Entity, move: np.ndarray):
         return
-
