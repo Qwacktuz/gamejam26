@@ -3,19 +3,23 @@ from src.Rendering.SpriteSheet import SpriteSheet
 from src.World.Entities.Entity import Entity
 import numpy as np
 import os
+
+from src.World.Entities.WaterBall import WaterBall
 from src.World.Objects.GameObject import GameObject
 from src.Util import approach
 import pygame as pg
 
 class Player(Entity):
-    def __init__(self, pos: np.ndarray):
+    def __init__(self, pos: np.ndarray, room):
         super().__init__(pos,
                          np.array([[10,11],[20, 22]], dtype=np.int32),
                          np.array([32, 32], dtype=np.int32),
                          os.path.join("Assets", "kitty_normal.png"))
+        self.room = room
         self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
         self.dashArrow.images[0].insert(1, pg.transform.rotate(self.dashArrow.images[0][0], -90))
         # self.dashArrow.images[0][2] = pg.transform.rotate(self.dashArrow.images[0][2], 180)
+        self.isPlayer = True
 
         self.frameTimes = [6,4,4,6]
 
@@ -50,6 +54,8 @@ class Player(Entity):
         self.dashSpeed = 200
         self.lastDashDirection = np.array([1,0], dtype =int)
         self.dashDirection = np.zeros(2)
+
+        self.size = 1
 
     def input(self, y, x, jump, dash):
         self.lastInput[0] = x
@@ -107,9 +113,11 @@ class Player(Entity):
                 self.state = 2
                 self.dashTimer = self.dashTime
                 self.dashDirection = self.lastDashDirection.copy()
+                self.room.addEntity(WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed))
 
         elif self.state == 2:
             self.velocity = self.dashDirection * self.dashSpeed
+
             self.dashTimer -= deltaTime
             if self.dashTimer < 0:
                 self.state = 0
@@ -142,9 +150,15 @@ class Player(Entity):
     def updateState(self):
         # 0: idle, 1: running, 2: enterDash, 3: dashBall
         if self.isGrounded:
-            if not np.any(np.abs(self.velocity) > 16):
+            if not np.any(np.abs(self.velocity) > 20):
                 self.animationState = 0
             else:
                 self.animationState = 1
         if self.state == 1 and self.animationState != 3:
             self.animationState = 2
+
+    def grow(self):
+        self.size = min(self.size, self.size + 1)
+
+    def onCollide(self, entity: Entity, move: np.ndarray):
+        return

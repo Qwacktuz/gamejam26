@@ -19,7 +19,7 @@ class Entity(GameObject):
         self.pos += self.velocity * deltaTime
         for i in objects:
             if self.collide(i):
-                self.adjustPos(i, self.velocity * deltaTime)
+                i.onCollide(self, self.velocity * deltaTime)
 
     def adjustPos(self, other: GameObject, lastMove: np.ndarray):
         # move self out of others hitbox
@@ -37,3 +37,6 @@ class Entity(GameObject):
         data["type"] = type
         data["pos"] = self.pos.tolist()
         return data
+
+    def collideWith(self, other: GameObject, move: np.ndarray):
+        return

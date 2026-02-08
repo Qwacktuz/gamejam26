@@ -15,13 +15,15 @@ class Game:
 
         self.running = True
 
-        self.player = Player(np.array([0,0], dtype=np.float32))
         self.world = World()
+        self.player = Player(np.array([0,0], dtype=np.float32), self.world.currentRoom)
         self.world.currentRoom.entities.append(self.player)
+        self.player.pos[:] = self.world.currentRoom.respawn
 
         self.animationFrame = 0
 
         # self.ui = UI(os.path.join("Assets", "dialogue1.png"))
+        self.editing = False
         self.editor = Editor(self.world)
 
     def run(self):
@@ -55,15 +57,17 @@ class Game:
                     self.camera.zoom(0.8)
                 if event.key == pg.K_MINUS:
                     self.camera.zoom(1.25)
-                if event.key == pg.K_p:
+                if event.key == pg.K_p and self.editing:
                     self.world.save()
                 if event.key == pg.K_SPACE:
                     self.player.lastJump = self.player.bufferTime
 
-                self.editor.input(pg.key.get_pressed())
+                if self.editing:
+                    self.editor.input(pg.key.get_pressed())
 
             if event.type == pg.MOUSEBUTTONDOWN:
-                self.editor.press(self.camera.toWorldPos(event.pos))
+                if self.editing:
+                    self.editor.press(self.camera.toWorldPos(event.pos))
 
         # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()

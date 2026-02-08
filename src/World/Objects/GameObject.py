@@ -4,7 +4,6 @@ import pygame as pg
 import numpy as np
 from src.Rendering.SpriteSheet import SpriteSheet
 
-
 # superclass for stuff that can be placed in the level
 # got stuff for collision and rendering
 class GameObject:
@@ -20,12 +19,18 @@ class GameObject:
         self.animationFrame = 0
         self.animationState = 0 # make a statemachine handle this or some shit
         self.lookDir = np.ones(2)
+        self.isPlayer = False
+        self.deleted = False
 
     def collide(self, other: type[Self]) -> bool:
         return np.all(self.pos + self.hitbox[1] > other.pos - other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
 
     def collidePoint(self, pos: np.ndarray):
         return np.all(self.pos + self.hitbox[0] < pos) and np.all(pos < self.pos + self.hitbox[1])
+
+    def onCollide(self, entity, move: np.ndarray):
+        entity.collideWith(self, move)
+        entity.adjustPos(self, move)
 
     def render(self, camera: Camera, animationFrame: int = 0, box = None):
         if box is None:

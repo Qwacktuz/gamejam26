@@ -18,6 +18,7 @@ class Room:
         self.background: None | pg.Surface = None
         self.path = path
         self.backgroundPath = None
+        self.respawn = np.zeros(2, dtype=np.float32)
 
         self.load(path)
 
@@ -25,6 +26,7 @@ class Room:
         with open(path) as f:
             data = json.load(f)
         self.box = np.array(data["box"], dtype=np.int32)
+        self.respawn = np.array(data["respawn"], dtype=np.float32)
         self.entities = [createEntity(self.box[0], i["type"], i["pos"]) for i in data["entities"]]
         self.objects = [createObject(self.box[0], i["type"], i["pos"], i["size"]) for i in data["objects"]]
         if data["background"]:
@@ -34,8 +36,9 @@ class Room:
     def save(self):
         data = dict()
         data["box"] = self.box.tolist()
+        data["respawn"] = self.respawn.astype(int).tolist()
         data["background"] = self.backgroundPath
-        data["entities"] = [i.save() for i in self.entities if not isinstance(i, Player)]
+        data["entities"] = [i.save() for i in self.entities if not i.isPlayer]
         data["objects"] = [i.save() for i in self.objects]
         with open(self.path, "w") as f:
             json.dump(data, f)
@@ -48,13 +51,20 @@ class Room:
 
     def update(self, deltaTime: float):
         moved = []
-        for idx, entity in enumerate(self.entities):
+        idx = 0
+        while idx < len(self.entities):
+            entity = self.entities[idx]
+            if entity.deleted:
+                self.entities.pop(idx)
+                continue
+
             if not self.contains(entity.pos, entity.hitbox):
-                moved.append(idx - len(moved))
+                moved.append(self.entities.pop(idx))
             else:
                 entity.update(deltaTime, self.objects)
+                idx += 1
 
-        return [self.entities.pop(i) for i in moved]
+        return moved
 
     def render(self, camera: Camera, animationFrame: int):
         if self.background:

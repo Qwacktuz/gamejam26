@@ -29,31 +29,16 @@ class Editor(UI):
                 self.currentBlock = createObject(self.currentRoom.box[0], "Barrier", self.currentRoom.box[1]*0.5, (32, 32))
                 self.currentRoom.addObject(self.currentBlock)
 
+        move = np.array([keys[pg.K_RIGHT] - keys[pg.K_LEFT], keys[pg.K_DOWN] - keys[pg.K_UP]])
+
         if self.currentBlock is not None:
-            if keys[pg.K_UP]:
-                if self.mode == 0: self.currentBlock.pos[1] -= step
-                elif self.mode == 2: self.currentBlock.hitbox[1, 1] -= step
-                elif self.mode == 1:
-                    self.currentBlock.pos[1] -= step
-                    self.currentBlock.hitbox[1, 1] += step
-            elif keys[pg.K_DOWN]:
-                if self.mode == 0: self.currentBlock.pos[1] += step
-                elif self.mode == 1: self.currentBlock.hitbox[1, 1] += step
-                elif self.mode == 2:
-                    self.currentBlock.pos[1] += step
-                    self.currentBlock.hitbox[1, 1] -= step
-            elif keys[pg.K_LEFT]:
-                if self.mode == 0: self.currentBlock.pos[0] -= step
-                elif self.mode == 2: self.currentBlock.hitbox[1, 0] -= step
-                elif self.mode == 1:
-                    self.currentBlock.pos[0] -= step
-                    self.currentBlock.hitbox[1, 0] += step
-            elif keys[pg.K_RIGHT]:
-                if self.mode == 0: self.currentBlock.pos[0] += step
-                elif self.mode == 1: self.currentBlock.hitbox[1, 0] += step
-                elif self.mode == 2:
-                    self.currentBlock.pos[0] += step
-                    self.currentBlock.hitbox[1, 0] -= step
+            if self.mode == 0:
+                self.currentBlock.pos += move * step
+            elif self.mode == 1:
+                self.currentBlock.hitbox[0] += move * step
+                self.currentBlock.hitbox[1] -= move * step
+            elif self.mode == 2:
+                self.currentBlock.hitbox[1] += move * step
 
     def press(self, pos):
         if self.currentRoom is None:
