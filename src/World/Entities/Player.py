@@ -40,6 +40,7 @@ class Player(Entity):
         self.airFactor = 0.65
 
         self.jumpSound = pg.mixer.Sound(os.path.join("Assets", "Sounds", "Jump16.wav"))
+        self.dashSound = pg.mixer.Sound(os.path.join("Assets", "Sounds", "fah.wav"))
 
         self.jumpPower = -125
         self.jumpHBoost = 40
@@ -137,6 +138,7 @@ class Player(Entity):
                 self.room.addEntity(
                     WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed)
                 )
+                self.dashSound.play()
 
         elif self.state == 2:
             self.velocity = self.dashDirection * self.dashSpeed
@@ -187,4 +189,3 @@ class Player(Entity):
 
     def onCollide(self, entity: Entity, move: np.ndarray):
         return
-
