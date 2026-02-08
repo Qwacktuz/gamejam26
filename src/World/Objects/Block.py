@@ -5,11 +5,9 @@ from src.World.Objects.GameObject import GameObject
 
 
 class Block(GameObject):
-    def __init__(self, pos: np.ndarray, size: tuple[int, int]):
-        super().__init__(pos,
-                         np.array([[0,0], [32, 32]], dtype=np.int32),
-                         np.array([32, 32], dtype=np.int32),
+    def __init__(self, pos: np.ndarray, size: tuple[int, int], *args):
+        super().__init__(pos, np.array([[0, 0], [32, 32]], dtype=np.int32), np.array([32, 32], dtype=np.int32),
                          os.path.join("Assets", "32gridmap.png"))
 
-    def save(self, type: str = ""):
-        return super().save("Block")
+    def save(self, type: str = "", *args):
+        return super().save("Block", *args)

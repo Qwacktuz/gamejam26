@@ -4,8 +4,8 @@ import numpy as np
 import pygame as pg
 import json
 from src.Rendering.Camera import Camera
+from src.Rendering.SpriteSheet import SpriteSheet
 from src.World.Entities.Entity import Entity
-from src.World.Entities.Player import Player
 from src.World.Objects.GameObject import GameObject
 from src.World.ObjectTypes import createObject, createEntity
 
@@ -15,10 +15,14 @@ class Room:
         self.box = np.zeros((2,2), dtype=np.int32)
         self.entities: list[Entity] = []
         self.objects: list[GameObject] = [] # no entities
-        self.background: None | pg.Surface = None
+        self.background: None | SpriteSheet = None
         self.path = path
         self.backgroundPath = None
         self.respawn = np.zeros(2, dtype=np.float32)
+
+        self.animationFrame = 0
+
+        self.unlock = 0
 
         self.load(path)
 
@@ -27,10 +31,10 @@ class Room:
             data = json.load(f)
         self.box = np.array(data["box"], dtype=np.int32)
         self.respawn = np.array(data["respawn"], dtype=np.float32)
-        self.entities = [createEntity(self.box[0], i["type"], i["pos"]) for i in data["entities"]]
-        self.objects = [createObject(self.box[0], i["type"], i["pos"], i["size"]) for i in data["objects"]]
+        self.entities = [createEntity(self.box[0], i["type"], i["pos"], *i["args"]) for i in data["entities"]]
+        self.objects = [createObject(self.box[0], i["type"], i["pos"], i["size"], *i["args"]) for i in data["objects"]]
         if data["background"]:
-            self.background = pg.image.load(os.path.join("Assets", data["background"])).convert_alpha()
+            self.background = SpriteSheet(os.path.join("Assets", data["background"]), *data["box"][1])
             self.backgroundPath = data["background"]
 
     def save(self):
@@ -58,20 +62,29 @@ class Room:
                 self.entities.pop(idx)
                 continue
 
+            if entity.unlock > 0 and entity.unlocked:
+                self.unlock += entity.unlock
+                entity.unlock = 0
+            elif -self.unlock <= entity.unlock < 0:
+                entity.onUnlock()
+
             if not self.contains(entity.pos, entity.hitbox):
                 moved.append(self.entities.pop(idx))
             else:
-                entity.update(deltaTime, self.objects)
+                entity.update(deltaTime, self.objects + self.entities)
                 idx += 1
 
         return moved
 
     def render(self, camera: Camera, animationFrame: int):
         if self.background:
-            rect = self.background.get_rect()
+            if animationFrame % 30:
+                self.animationFrame = (self.animationFrame + 1) % 6
+            image = self.background.get_image(0, self.animationFrame)
+            rect = image.get_rect()
             rect.size = (self.box[1] / camera.size * camera.screen.get_size()).astype(int)
             rect.topleft = ((self.box[0] - camera.pos) / camera.size * camera.screen.get_size()).astype(int)
-            camera.screen.blit(pg.transform.scale(self.background, (rect.w, rect.h)), rect)
+            camera.screen.blit(pg.transform.scale(image, (rect.w, rect.h)), rect)
 
         for i in self.objects + self.entities:
             i.render(camera, animationFrame)

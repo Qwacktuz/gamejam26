@@ -50,7 +50,7 @@ class Editor(UI):
                 return
 
         if self.currentBlock is None:
-            for block in self.currentRoom.objects:
+            for block in self.currentRoom.objects + self.currentRoom.entities:
                 if block.collidePoint(pos):
                     self.currentBlock = block
                     break

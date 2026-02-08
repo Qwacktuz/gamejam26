@@ -8,33 +8,29 @@ from src.World.Objects.GameObject import GameObject
 from src.Util import approach
 import pygame as pg
 
-
 class Player(Entity):
     def __init__(self, pos: np.ndarray, room):
-        self.hitboxes = np.array(
-            [[[16, 15], [22, 21]], [[10, 11], [20, 22]]], dtype=np.int32
-        )
-        self.renderingBoxes = np.array([[16, 10], [32, 32]], dtype=np.int32)
+        self.hitboxes = np.array([[[16,15],[22,21]],
+                                         [[10,11],[20,22]]], dtype=np.int32)
+        self.renderingBoxes = np.array([[16,10],
+                                               [32,32]], dtype=np.int32)
         self.maxSize = 1
         self.size = 1
 
-        super().__init__(
-            pos, self.hitboxes[self.size], self.renderingBoxes[self.size], None
-        )
+        super().__init__(pos,
+                         self.hitboxes[self.size],
+                         self.renderingBoxes[self.size],
+                         None)
         self.room = room
         self.isPlayer = True
 
         self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
         for i in range(5):
-            self.dashArrow.images[0].insert(
-                i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90)
-            )
+            self.dashArrow.images[0].insert(i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90))
         self.dashArrowFrame = 0
 
-        self.spriteSheets = [
-            SpriteSheet(os.path.join("Assets", "kitty_small.png"), 16, 10),
-            SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32),
-        ]
+        self.spriteSheets = [SpriteSheet(os.path.join("Assets", "kitty_small.png"),  16, 10),
+                             SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32)]
         self.spriteSheet = self.spriteSheets[self.size]
 
         self.frameTimes = [6, 4, 4, 6]
@@ -67,6 +63,7 @@ class Player(Entity):
         self.jumpHBoost = 40
         self.halfGravThreshold = 40
         self.jumpThruBoost = -40
+        self.stoppedJump = False
 
         self.bufferTime = 0.1
         self.cayoteTime = 0.3
@@ -94,6 +91,8 @@ class Player(Entity):
             self.lastDashDirection[:] = (x, y)
         if x != 0:
             self.lookDir[0] = x
+        if not jump:
+            self.stoppedJump = True
 
     def update(self, deltaTime: float, objects: list[GameObject]):
         if (
@@ -109,6 +108,7 @@ class Player(Entity):
             self.lastDash = 0
             self.dashTransTimer = self.dashTransTime
             self.dashArrowFrame = 0
+            self.stoppedJump = True
 
         if self.state == 0:
             self.velocity[0] = approach(
@@ -131,11 +131,12 @@ class Player(Entity):
                 ),
             )
 
-            if self.jumpPressed and self.velocity[1] < 0:
+            if self.jumpPressed and self.velocity[1] < 0 and not self.stoppedJump and self.dashCooldownTimer < -0.5:
                 self.pos[1] += self.jumpThruBoost * deltaTime
 
             if self.isGrounded:
                 self.lastGrounded = self.cayoteTime
+                self.stoppedJump = False
             else:
                 self.lastGrounded -= deltaTime
 
@@ -158,9 +159,7 @@ class Player(Entity):
                 self.state = 2
                 self.dashTimer = self.dashTime
                 self.dashDirection = self.lastDashDirection.copy()
-                self.room.addEntity(
-                    WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed)
-                )
+                self.room.addEntity(WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed))
                 self.shrink()
                 self.dashSound.play()
 
@@ -206,7 +205,7 @@ class Player(Entity):
     def updateState(self):
         # 0: idle, 1: running, 2: enterDash, 3: dashBall
         if self.isGrounded:
-            if not np.any(np.abs(self.velocity) > 20):
+            if not np.any(np.abs(self.velocity) > 30):
                 self.animationState = 0
             else:
                 self.animationState = 1
@@ -229,4 +228,5 @@ class Player(Entity):
         self.shrinkSound.play()
 
     def onCollide(self, entity: Entity, move: np.ndarray):
+        entity.collideWith(self, move)
         return

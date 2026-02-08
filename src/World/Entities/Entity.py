@@ -3,7 +3,7 @@ from src.World.Objects.GameObject import GameObject
 import numpy as np
 
 class Entity(GameObject):
-    def __init__(self, pos: np.ndarray, hitbox: np.ndarray, renderingBox: np.ndarray, asset: str|None):
+    def __init__(self, pos: np.ndarray, hitbox: np.ndarray, renderingBox: np.ndarray, asset: str|None, *args):
         super().__init__(pos, hitbox, renderingBox, asset)
         self.velocity = np.array([0,0], dtype=np.float32)
 
@@ -18,6 +18,8 @@ class Entity(GameObject):
 
         self.pos += self.velocity * deltaTime
         for i in objects:
+            if i == self:
+                continue
             if self.collide(i):
                 i.onCollide(self, self.velocity * deltaTime)
 
@@ -32,11 +34,15 @@ class Entity(GameObject):
         if idx == 1 and needed[1] < 0:
             self.isGrounded = True
 
-    def save(self, type: str = ""):
+    def save(self, type: str = "", *args):
         data = dict()
         data["type"] = type
         data["pos"] = self.pos.tolist()
+        data["args"] = args
         return data
 
     def collideWith(self, other: GameObject, move: np.ndarray):
         return
+
+    def onUnlock(self):
+        self.deleted = True

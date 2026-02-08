@@ -7,7 +7,7 @@ from src.Rendering.SpriteSheet import SpriteSheet
 # superclass for stuff that can be placed in the level
 # got stuff for collision and rendering
 class GameObject:
-    def __init__(self, pos: np.ndarray, hitbox: np.ndarray, renderingBox: np.ndarray, asset: str|None):
+    def __init__(self, pos: np.ndarray, hitbox: np.ndarray, renderingBox: np.ndarray, asset: str|None, *args):
         self.pos = pos
         self.hitbox = hitbox
         self.renderingBox = renderingBox
@@ -21,6 +21,8 @@ class GameObject:
         self.lookDir = np.ones(2)
         self.isPlayer = False
         self.deleted = False
+        self.unlock = 0
+        self.unlocked = False
 
     def collide(self, other: type[Self]) -> bool:
         return np.all(self.pos + self.hitbox[1] > other.pos - other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
@@ -56,9 +58,10 @@ class GameObject:
         topLeft = ((self.pos + self.hitbox[0] - camera.pos - 16) / camera.size * camera.screen.get_size()).astype(int)
         pg.draw.rect(camera.screen, (0, 255, 0), (topLeft, size))
 
-    def save(self, type: str = ""):
+    def save(self, type: str = "", *args):
         data = dict()
         data["type"] = type
         data["pos"] = self.pos.tolist()
         data["size"] = self.hitbox[1].tolist()
+        data["args"] = args
         return data
