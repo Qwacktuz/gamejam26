@@ -3,7 +3,6 @@ from src.Rendering.SpriteSheet import SpriteSheet
 from src.World.Entities.Entity import Entity
 import numpy as np
 import os
-
 from src.World.Entities.WaterBall import WaterBall
 from src.World.Objects.GameObject import GameObject
 from src.Util import approach
@@ -26,7 +25,9 @@ class Player(Entity):
         self.isPlayer = True
 
         self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
-        self.dashArrow.images[0].insert(1, pg.transform.rotate(self.dashArrow.images[0][0], -90))
+        for i in range(5):
+            self.dashArrow.images[0].insert(i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90))
+        self.dashArrowFrame = 0
 
         self.spriteSheets = [SpriteSheet(os.path.join("Assets", "kitty_small.png"),  16, 10),
                              SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32)]
@@ -88,6 +89,7 @@ class Player(Entity):
             self.animationFrame = 0
             self.lastDash = 0
             self.dashTransTimer = self.dashTransTime
+            self.dashArrowFrame = 0
 
         if self.state == 0:
             self.velocity[0] = approach(
@@ -166,7 +168,9 @@ class Player(Entity):
             self.animationFrame = min(self.animationFrame, 2)
 
         if self.state == 1 or self.state == 2:
-            image = self.dashArrow.get_image(0, abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
+            if animationFrame % 3 == 0:
+                self.dashArrowFrame = min(self.dashArrowFrame + 1, 4)
+            image = self.dashArrow.get_image(0, 3*self.dashArrowFrame + abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
             image = pg.transform.flip(image, True, bool(self.lastDashDirection[1]==1))
             self.renderImage(image, (64,64), camera, 0)
 
