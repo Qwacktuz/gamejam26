@@ -4,23 +4,32 @@ from src.Rendering.Camera import Camera
 from src.UI.Editor import Editor
 from src.World.Entities.Player import Player
 from src.World.World import World
+import os
 
 pg.init()
+pg.mixer.init()
+
 
 class Game:
     def __init__(self):
-        self.camera = Camera(np.array([0,0], dtype=np.float32), np.array([320, 180], dtype=np.float32))
+        self.camera = Camera(
+            np.array([0, 0], dtype=np.float32), np.array([320, 180], dtype=np.float32)
+        )
         pg.display.set_caption("Game jam 26")
+        pg.mixer.music.load(os.path.join("Assets", "Sounds", "sample_track2.wav"))
+        pg.mixer.music.play(-1)
+        pg.mixer.music.set_volume(0.5)
         self.clock = pg.time.Clock()
 
         self.running = True
 
         self.world = World()
-        self.player = Player(np.array([0,0], dtype=np.float32), self.world.currentRoom)
+        self.player = Player(np.array([0, 0], dtype=np.float32), self.world.currentRoom)
         self.world.currentRoom.entities.append(self.player)
         self.player.pos[:] = self.world.currentRoom.respawn
 
         self.animationFrame = 0
+        self.music_paused = False
 
         # self.ui = UI(os.path.join("Assets", "dialogue1.png"))
         self.editing = False
@@ -30,7 +39,7 @@ class Game:
         while self.running:
             deltaTime = self.clock.tick(60) * 0.001
             if deltaTime > 0.1:
-                deltaTime = 1/60
+                deltaTime = 1 / 60
 
             self.inputhandler()
 
@@ -61,6 +70,13 @@ class Game:
                     self.world.save()
                 if event.key == pg.K_SPACE:
                     self.player.lastJump = self.player.bufferTime
+                if event.key == pg.K_m:
+                    if self.music_paused:
+                        pg.mixer.music.unpause()
+                        self.music_paused = False
+                    else:
+                        pg.mixer.music.pause()
+                        self.music_paused = True
 
                 if self.editing:
                     self.editor.input(pg.key.get_pressed())
@@ -72,14 +88,17 @@ class Game:
         # add inputs here for run every frame button is held down
         keys = pg.key.get_pressed()
         # maybe scuff way to get player class to handle its own inputs
-        self.player.input(keys[pg.K_s] - keys[pg.K_w], keys[pg.K_d] - keys[pg.K_a],
-                          keys[pg.K_SPACE],
-                          keys[pg.K_PERIOD])
+        self.player.input(
+            keys[pg.K_s] - keys[pg.K_w],
+            keys[pg.K_d] - keys[pg.K_a],
+            keys[pg.K_SPACE],
+            keys[pg.K_PERIOD],
+        )
 
         # self.editor.input(keys)
 
     def render(self):
-        self.camera.screen.fill((0,0,0))
+        self.camera.screen.fill((0, 0, 0))
 
         self.world.render(self.camera, self.animationFrame)
         # self.ui.render(self.camera.screen, 0)
