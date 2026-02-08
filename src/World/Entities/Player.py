@@ -8,29 +8,39 @@ from src.World.Objects.GameObject import GameObject
 from src.Util import approach
 import pygame as pg
 
+
 class Player(Entity):
     def __init__(self, pos: np.ndarray, room):
-        self.hitboxes = np.array([[[16,15],[22,21]],
-                                         [[10,11],[20,22]]], dtype=np.int32)
-        self.renderingBoxes = np.array([[16,10],
-                                               [32,32]], dtype=np.int32)
+        self.hitboxes = np.array(
+            [[[16, 15], [22, 21]], [[10, 11], [20, 22]]], dtype=np.int32
+        )
+        self.renderingBoxes = np.array([[16, 10], [32, 32]], dtype=np.int32)
         self.maxSize = 1
         self.size = 1
 
-        super().__init__(pos,
-                         self.hitboxes[self.size],
-                         self.renderingBoxes[self.size],
-                         None)
+        super().__init__(
+            pos, self.hitboxes[self.size], self.renderingBoxes[self.size], None
+        )
         self.room = room
         self.isPlayer = True
 
         self.dashArrow = SpriteSheet(os.path.join("Assets", "arrows.png"), 64, 64)
+<<<<<<< HEAD
         for i in range(5):
             self.dashArrow.images[0].insert(i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90))
         self.dashArrowFrame = 0
+||||||| parent of 067c6f2 (feat(sound): update sound for various player actions)
+        self.dashArrow.images[0].insert(1, pg.transform.rotate(self.dashArrow.images[0][0], -90))
+=======
+        self.dashArrow.images[0].insert(
+            1, pg.transform.rotate(self.dashArrow.images[0][0], -90)
+        )
+>>>>>>> 067c6f2 (feat(sound): update sound for various player actions)
 
-        self.spriteSheets = [SpriteSheet(os.path.join("Assets", "kitty_small.png"),  16, 10),
-                             SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32)]
+        self.spriteSheets = [
+            SpriteSheet(os.path.join("Assets", "kitty_small.png"), 16, 10),
+            SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32),
+        ]
         self.spriteSheet = self.spriteSheets[self.size]
 
         self.frameTimes = [6, 4, 4, 6]
@@ -46,8 +56,18 @@ class Player(Entity):
         self.deacceleration = 400
         self.airFactor = 0.65
 
-        self.jumpSound = pg.mixer.Sound(os.path.join("Assets", "Sounds", "Jump16.wav"))
-        self.dashSound = pg.mixer.Sound(os.path.join("Assets", "Sounds", "fah.wav"))
+        self.jumpSound = pg.mixer.Sound(
+            os.path.join("Assets", "Sounds", "sfx_jump1.wav")
+        )
+        self.dashSound = pg.mixer.Sound(
+            os.path.join("Assets", "Sounds", "sfx_swish1.wav")
+        )
+        self.shrinkSound = pg.mixer.Sound(
+            os.path.join("Assets", "Sounds", "sfx_dash2.wav")
+        )
+        self.growSound = pg.mixer.Sound(
+            os.path.join("Assets", "Sounds", "sfx_water_swirl1.wav")
+        )
 
         self.jumpPower = -125
         self.jumpHBoost = 40
@@ -82,7 +102,12 @@ class Player(Entity):
             self.lookDir[0] = x
 
     def update(self, deltaTime: float, objects: list[GameObject]):
-        if self.lastDash > 0 and self.state == 0 and self.dashCooldownTimer < 0 and self.size > 0:
+        if (
+            self.lastDash > 0
+            and self.state == 0
+            and self.dashCooldownTimer < 0
+            and self.size > 0
+        ):
             self.state = 1
             self.lastJump = 0
             self.lastGrounded = 0
@@ -139,7 +164,9 @@ class Player(Entity):
                 self.state = 2
                 self.dashTimer = self.dashTime
                 self.dashDirection = self.lastDashDirection.copy()
-                self.room.addEntity(WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed))
+                self.room.addEntity(
+                    WaterBall(self.pos.copy(), -2 * self.dashDirection * self.dashSpeed)
+                )
                 self.shrink()
                 self.dashSound.play()
 
@@ -168,11 +195,24 @@ class Player(Entity):
             self.animationFrame = min(self.animationFrame, 2)
 
         if self.state == 1 or self.state == 2:
+<<<<<<< HEAD
             if animationFrame % 3 == 0:
                 self.dashArrowFrame = min(self.dashArrowFrame + 1, 4)
             image = self.dashArrow.get_image(0, 3*self.dashArrowFrame + abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
             image = pg.transform.flip(image, True, bool(self.lastDashDirection[1]==1))
             self.renderImage(image, (64,64), camera, 0)
+||||||| parent of 067c6f2 (feat(sound): update sound for various player actions)
+            image = self.dashArrow.get_image(0, abs(self.lastDashDirection[1]) + 2*abs(self.lastDashDirection[0]) - 1)
+            image = pg.transform.flip(image, True, bool(self.lastDashDirection[1]==1))
+            self.renderImage(image, (64,64), camera, 0)
+=======
+            image = self.dashArrow.get_image(
+                0,
+                abs(self.lastDashDirection[1]) + 2 * abs(self.lastDashDirection[0]) - 1,
+            )
+            image = pg.transform.flip(image, True, bool(self.lastDashDirection[1] == 1))
+            self.renderImage(image, (64, 64), camera, 0)
+>>>>>>> 067c6f2 (feat(sound): update sound for various player actions)
 
         super().render(camera, animationFrame)
 
@@ -191,6 +231,7 @@ class Player(Entity):
         self.spriteSheet = self.spriteSheets[self.size]
         self.hitbox = self.hitboxes[self.size]
         self.renderingBox = self.renderingBoxes[self.size]
+        self.growSound.play()
 
     def shrink(self):
         self.size = max(0, self.size - 1)
@@ -198,6 +239,8 @@ class Player(Entity):
         self.hitbox = self.hitboxes[self.size]
         self.renderingBox = self.renderingBoxes[self.size]
         self.animationState = 1
+        self.shrinkSound.play()
 
     def onCollide(self, entity: Entity, move: np.ndarray):
         return
+
