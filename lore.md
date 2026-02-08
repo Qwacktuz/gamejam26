@@ -1,3 +1,0 @@
-For decades humanity has ruled earth until The Water Kitty crashed their spaceship into earth and killed humanity (by accident). The kitten has to undo their mistakes by collecting the parts to build a time machine in order to save humanity. And it turns out the last part to complete the machine was stuck on top of a mountain. Water Kitty must climb the mountain to save the world! :3
-
-I flere århundre har menneskene på jorda men så kom water kitty i romship og kræsjet og drepte alle så water kitty prøver nå å samle alle delene til en tidsmaskin for å redde menneskene men den siste delen fantes ikke. en dag så water kitty delen lande på toppen av en fjell, så water kitty må klatre fjellet for å redde verden :3
