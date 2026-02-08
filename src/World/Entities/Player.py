@@ -10,12 +10,12 @@ import pygame as pg
 
 class Player(Entity):
     def __init__(self, pos: np.ndarray, room):
-        self.hitboxes = np.array([[[16,15],[22,21]],
+        self.hitboxes = np.array([[[13,15],[19,21]],
                                          [[10,11],[20,22]]], dtype=np.int32)
-        self.renderingBoxes = np.array([[16,10],
+        self.renderingBoxes = np.array([[24,10],
                                                [32,32]], dtype=np.int32)
         self.maxSize = 1
-        self.size = 1
+        self.size = 0
 
         super().__init__(pos,
                          self.hitboxes[self.size],
@@ -29,7 +29,7 @@ class Player(Entity):
             self.dashArrow.images[0].insert(i * 3 + 1, pg.transform.rotate(self.dashArrow.images[0][i * 3], -90))
         self.dashArrowFrame = 0
 
-        self.spriteSheets = [SpriteSheet(os.path.join("Assets", "kitty_small.png"),  16, 10),
+        self.spriteSheets = [SpriteSheet(os.path.join("Assets", "kitty_small.png"),  24, 10),
                              SpriteSheet(os.path.join("Assets", "kitty_normal.png"), 32, 32)]
         self.spriteSheet = self.spriteSheets[self.size]
 

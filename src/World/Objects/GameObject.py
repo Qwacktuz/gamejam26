@@ -25,7 +25,7 @@ class GameObject:
         self.unlocked = False
 
     def collide(self, other: type[Self]) -> bool:
-        return np.all(self.pos + self.hitbox[1] > other.pos - other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
+        return np.all(self.pos + self.hitbox[1] > other.pos + other.hitbox[0]) and np.all(self.pos + self.hitbox[0] < other.pos + other.hitbox[1])
 
     def collidePoint(self, pos: np.ndarray):
         return np.all(self.pos + self.hitbox[0] < pos) and np.all(pos < self.pos + self.hitbox[1])

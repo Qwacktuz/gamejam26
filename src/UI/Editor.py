@@ -1,5 +1,5 @@
 import numpy as np
-from src.World.ObjectTypes import createObject
+from src.World.ObjectTypes import createObject, createEntity
 from src.UI.UI import UI
 from src.World.Objects.GameObject import GameObject
 from src.World.World import World

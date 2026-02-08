@@ -3,6 +3,7 @@ import numpy as np
 from src.World.Entities.Button import Button
 from src.World.Entities.Door import Door
 from src.World.Entities.WaterBall import WaterBall
+from src.World.Entities.Waterdrop import Waterdrop
 from src.World.Objects.Barrier import Barrier
 from src.World.Objects.Block import Block
 from src.World.Entities.Entity import Entity
@@ -13,7 +14,8 @@ entityTypes = {
     "Player": Player,
     "Button": Button,
     "Door": Door,
-    "WaterBall": WaterBall
+    "WaterBall": WaterBall,
+    "Waterdrop": Waterdrop
 }
 
 objectTypes = {

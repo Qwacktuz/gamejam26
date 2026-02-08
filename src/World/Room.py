@@ -31,8 +31,8 @@ class Room:
             data = json.load(f)
         self.box = np.array(data["box"], dtype=np.int32)
         self.respawn = np.array(data["respawn"], dtype=np.float32)
-        self.entities = [createEntity(self.box[0], i["type"], i["pos"], *i["args"]) for i in data["entities"]]
-        self.objects = [createObject(self.box[0], i["type"], i["pos"], i["size"], *i["args"]) for i in data["objects"]]
+        self.entities = [createEntity((0,0), i["type"], i["pos"], *i["args"]) for i in data["entities"]]
+        self.objects = [createObject((0,0), i["type"], i["pos"], i["size"], *i["args"]) for i in data["objects"]]
         if data["background"]:
             self.background = SpriteSheet(os.path.join("Assets", data["background"]), *data["box"][1])
             self.backgroundPath = data["background"]

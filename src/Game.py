@@ -33,7 +33,7 @@ class Game:
         self.music_paused = False
 
         # self.ui = UI(os.path.join("Assets", "dialogue1.png"))
-        self.editing = True
+        self.editing = False
         self.editor = Editor(self.world)
 
         self.skybox = Skybox()
@@ -90,8 +90,8 @@ class Game:
                     self.world.save()
                 if event.key == self.inputs["jump"]:
                     self.player.lastJump = self.player.bufferTime
-                if event.key == pg.K_g:
-                    self.player.grow()
+                # if event.key == pg.K_g:
+                #     self.player.grow()
                 if event.key == self.inputs["dash"]:
                     self.player.lastDash = self.player.bufferTime
                 if event.key == pg.K_m:

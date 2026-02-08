@@ -8,7 +8,7 @@ from src.World.Objects.GameObject import GameObject
 
 class WaterBall(Entity):
     def __init__(self, pos, speed):
-        super().__init__(pos, np.array([[4,4], [12,12]]), np.array((16, 16)), os.path.join("Assets", "water_ball.png"))
+        super().__init__(pos, np.array([[12,12], [20,20]]), np.array((16, 16)), os.path.join("Assets", "water_ball.png"))
         self.velocity = speed
 
         self.state = 0
