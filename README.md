@@ -4,9 +4,10 @@
 This is our first time making a game with graphic design, audio design and Celeste-like movement.
 
 **Made by**
-[GamesDoneWr0ng](https://github.com/Qwacktuz) - Game logic and core gameplay
-[poloo :3](https://github.com/2012023) - Visuals and pixel art
-[Cactuz](https://github.com/GamesDoneWr0ng) - Sound design
+
+- [GamesDoneWr0ng](https://github.com/Qwacktuz) - Game logic and core gameplay
+- [poloo :3](https://github.com/2012023) - Visuals and pixel art
+- [Cactuz](https://github.com/GamesDoneWr0ng) - Sound design
 
 ## How to install and run the game
 
